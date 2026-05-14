@@ -7,6 +7,9 @@ const transporter = nodemailer.createTransport({
     user: process.env.GMAIL_EMAIL,
     pass: process.env.GMAIL_APP_PASSWORD,
   },
+  tls: {
+    rejectUnauthorized: false
+  }
 });
 
 const sendOTP = async (to, otp) => {
