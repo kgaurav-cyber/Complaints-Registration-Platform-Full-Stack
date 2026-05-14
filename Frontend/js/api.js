@@ -1,4 +1,4 @@
-const BACKEND_BASE_URL = "https://complaints-registration-platform-full-hwdi.onrender.com";
+const BACKEND_BASE_URL = "https://complaints-registration-platform-full-hwdi.onrender.com/api";
 
 export const apiCall = async (endpoint, options = {}) => {
   const url = `${BACKEND_BASE_URL}${endpoint}`;
