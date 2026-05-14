@@ -1,4 +1,4 @@
-const BACKEND_BASE_URL = "http://localhost:3000/api";
+const BACKEND_BASE_URL = "https://complaints-registration-platform-full-hwdi.onrender.com";
 
 export const apiCall = async (endpoint, options = {}) => {
   const url = `${BACKEND_BASE_URL}${endpoint}`;
@@ -8,7 +8,7 @@ export const apiCall = async (endpoint, options = {}) => {
   };
 
   const finalOptions = { ...defaultOptions, ...options };
-  
+
   if (options.body) {
     finalOptions.body = JSON.stringify(options.body);
   }
@@ -16,11 +16,11 @@ export const apiCall = async (endpoint, options = {}) => {
   try {
     const response = await fetch(url, finalOptions);
     const data = await response.json();
-    
+
     if (!response.ok) {
       throw new Error(data.error || "Something went wrong");
     }
-    
+
     return data;
   } catch (error) {
     throw error;
@@ -32,9 +32,9 @@ export const showToast = (message, type = "success") => {
   const toast = document.createElement("div");
   toast.className = `toast ${type}`;
   toast.textContent = message;
-  
+
   container.appendChild(toast);
-  
+
   setTimeout(() => {
     toast.style.opacity = "0";
     setTimeout(() => toast.remove(), 300);
