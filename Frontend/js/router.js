@@ -5,12 +5,11 @@ import { apiCall } from "./api.js";
 let currentUser = null;
 
 export const navigateTo = (path) => {
-  window.history.pushState({}, path, window.location.origin + path);
-  router();
+  window.location.hash = path;
 };
 
 export const router = async () => {
-  const path = window.location.pathname;
+  const path = window.location.hash.slice(1) || "/";
   const appContent = document.getElementById("app-content");
   
   try {
@@ -26,30 +25,30 @@ export const router = async () => {
   if (!currentUser) {
     if (path === "/register") {
       renderRegister(appContent);
+    } else if (path !== "/login" && path !== "/") {
+      window.location.hash = "/login";
+      return;
     } else {
-      // Default to login if not logged in
       renderLogin(appContent);
-      if (path !== "/login" && path !== "/") {
-          window.history.replaceState({}, "/login", "/login");
-      }
     }
     return;
   }
 
   // Authenticated routes
   if (currentUser.role === "admin") {
-    renderAdminDashboard(appContent);
     if (path !== "/admin") {
-        window.history.replaceState({}, "/admin", "/admin");
+        window.location.hash = "/admin";
+        return;
     }
+    renderAdminDashboard(appContent);
   } else {
     if (path === "/submit") {
       renderSubmitComplaint(appContent);
+    } else if (path !== "/dashboard") {
+        window.location.hash = "/dashboard";
+        return;
     } else {
       renderMyComplaints(appContent);
-      if (path !== "/dashboard") {
-          window.history.replaceState({}, "/dashboard", "/dashboard");
-      }
     }
   }
 };
@@ -76,7 +75,7 @@ const updateNavbar = (isLoggedIn) => {
 // Global handlers for links
 window.routerNavigateTo = navigateTo;
 
-window.addEventListener("popstate", router);
+window.addEventListener("hashchange", router);
 
 // Attach global event listener for form actions
 document.addEventListener("submit", (e) => {
