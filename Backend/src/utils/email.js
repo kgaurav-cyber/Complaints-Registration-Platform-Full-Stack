@@ -1,27 +1,22 @@
-const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
 require("dotenv").config();
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.GMAIL_EMAIL,
-    pass: process.env.GMAIL_APP_PASSWORD,
-  },
-  tls: {
-    rejectUnauthorized: false
-  }
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const sendOTP = async (to, otp) => {
-  const mailOptions = {
-    from: process.env.GMAIL_EMAIL,
-    to,
-    subject: "Your OTP for Complaints Registration",
-    text: `Your OTP is ${otp}. It will expire in 10 minutes.`,
-  };
-
   try {
-    await transporter.sendMail(mailOptions);
+    const { data, error } = await resend.emails.send({
+      from: process.env.RESEND_FROM_EMAIL || "Acme <onboarding@resend.dev>",
+      to: [to],
+      subject: "Your OTP for Complaints Registration",
+      html: `<p>Your OTP is <strong>${otp}</strong>. It will expire in 10 minutes.</p>`,
+    });
+
+    if (error) {
+      console.error("Error sending email:", error);
+      return false;
+    }
+    
     return true;
   } catch (error) {
     console.error("Error sending email:", error);
