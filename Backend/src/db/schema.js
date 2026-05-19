@@ -1,4 +1,4 @@
-const { pgTable, serial, text, timestamp, boolean } = require("drizzle-orm/pg-core");
+const { pgTable, serial, text, timestamp, boolean, integer } = require("drizzle-orm/pg-core");
 
 const users = pgTable("users", {
   id: serial("id").primaryKey(),
@@ -14,7 +14,7 @@ const users = pgTable("users", {
 
 const complaints = pgTable("complaints", {
   id: serial("id").primaryKey(),
-  user_id: serial("user_id").references(() => users.id),
+  user_id: integer("user_id").references(() => users.id),
   complaint_text: text("complaint_text").notNull(),
   ai_question: text("ai_question"),
   user_answer: text("user_answer"),
